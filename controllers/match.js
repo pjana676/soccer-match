@@ -16,8 +16,8 @@ const {
  */
 const getDashboard = async (req, res, next) => {
   try {
-    const matches = {};
-    res.success({ matches });
+    const matches = await matchService.getMatchInfo({});
+    res.success({ data: matches });
   } catch (error) {
     next(error)
   }
@@ -48,7 +48,7 @@ const scheduleMatch = [
       const matchDate = moment(matchDateTime).format('YYYY-MM-DD');
       const startTime = moment(matchDateTime).format('HH:mm');
 
-      const data = await matchService.scheduleMatch({ matchDate, startTime, stadium, teams })
+      const data = await matchService.scheduleMatch({ matchDate, startTime, stadium, teams });
       res.success({ data });
     } catch (error) {
       next(error)
@@ -71,8 +71,42 @@ const cancelMatch = async (req, res, next) => {
     }
 };
 
+/**
+ * user can subscribe any active match
+ */
+const matchSubscribe = async (req, res, next) => {
+    try {
+      const userId = req.user._id;
+      const { matchId  } = req.params;
+      if (!ObjectId.isValid(matchId))
+        throw createError.BadRequest(__.invalid_object_id);
+      const data = await matchService.matchSubscribe({ userId, matchId })
+      res.success({ data });
+    } catch (error) {
+      next(error)
+    }
+};
+
+/**
+ * user can unsubscribe to subscribed match
+ */
+const matchUnSubscribe = async (req, res, next) => {
+    try {
+      const userId = req.user._id;
+      const { subscriptionId } = req.params;
+      if (!ObjectId.isValid(subscriptionId))
+        throw createError.BadRequest(__.invalid_object_id);
+      const data = await matchService.matchUnSubscribe({ userId, subscriptionId })
+      res.success({ data });
+    } catch (error) {
+      next(error)
+    }
+};
+
 module.exports = {
   getDashboard,
   scheduleMatch,
   cancelMatch,
+  matchSubscribe,
+  matchUnSubscribe
 };

@@ -5,6 +5,9 @@ module.exports = {
   message_updated: 'Updated successfully',
   message_cancelled: 'Cancelled successfully',
   message_registration_ok: 'Registration successful',
+  successfully_unsubscribed: 'Successful unsubscribed.',
+  successfully_subscribed: 'Successful subscribed.',
+  already_subscribed: 'You already subscribed this match!',
 
   error_bad_request: 'Bad Request',
   error_unauthorized: 'Unauthorized',
@@ -23,5 +26,6 @@ module.exports = {
   error_email_not_valid: 'Email not valid',
   error_email_already_exist: 'Entered email already exist',
   invalid_match_reference: 'Invalid match reference!',
+  invalid_subscription_reference: 'Invalid subscription reference!!',
   invalid_object_id: 'Invalid object id!',
 };
