@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const { createError } = require('../errors')
-const { Sign } = require('../helpers/jwt-token');
+const { Sign } = require('../helpers/jwtToken');
 const __ = require('../helpers/locales')
 
 const { JWT_SECRET, JWT_EXPIRY = '9h' } = process.env;

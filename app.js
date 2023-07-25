@@ -26,6 +26,7 @@ function successResponder(options = {}) {
   });
 }
 
+
 app.use((req, res, next) => {
   res.success = successResponder.bind(res);
   next();

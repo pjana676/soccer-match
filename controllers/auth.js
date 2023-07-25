@@ -1,6 +1,6 @@
 const Joi = require('joi');
-const validate = require('../middlewares/validate-request');
-const authService = require('../services/auth')
+const validate = require('../middlewares/validateRequest');
+const authService = require('../services/auth');
 
 
 const registerCommonSchema = Joi.object({
@@ -57,7 +57,8 @@ const registerUser = [
     } catch (error) {
       next(error)
     }
-  }];
+  }
+];
 
 /**
  * user login to get authenticate

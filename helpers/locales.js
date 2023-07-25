@@ -3,11 +3,8 @@ module.exports = {
   message_created: 'Created successfully',
   message_saved: 'Saved successfully',
   message_updated: 'Updated successfully',
-  message_deleted: 'Deleted successfully',
+  message_cancelled: 'Cancelled successfully',
   message_registration_ok: 'Registration successful',
-  message_reset_email_sent: 'A password reset link has been sent to your registered email ID',
-  message_reset_ok: 'Password reset successful',
-  message_logout: 'Logged out successful ',
 
   error_bad_request: 'Bad Request',
   error_unauthorized: 'Unauthorized',
@@ -25,4 +22,6 @@ module.exports = {
   error_label_not_valid: '{#label} is not valid',
   error_email_not_valid: 'Email not valid',
   error_email_already_exist: 'Entered email already exist',
+  invalid_match_reference: 'Invalid match reference!',
+  invalid_object_id: 'Invalid object id!',
 };
