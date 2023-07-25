@@ -16,7 +16,7 @@ const {
  */
 const getDashboard = async (req, res, next) => {
   try {
-    const matches = await matchService.getMatchInfo({});
+    const matches = await matchService.getDashboard();
     res.success({ data: matches });
   } catch (error) {
     next(error)
@@ -47,7 +47,8 @@ const scheduleMatch = [
       const { matchDateTime, stadium, teams  } = req.body;
       const matchDate = moment(matchDateTime).format('YYYY-MM-DD');
       const startTime = moment(matchDateTime).format('HH:mm');
-
+      if (new Date() >  moment(matchDateTime))
+        throw createError.BadRequest(__.match_date_should_not_as_past_date);
       const data = await matchService.scheduleMatch({ matchDate, startTime, stadium, teams });
       res.success({ data });
     } catch (error) {
@@ -103,10 +104,23 @@ const matchUnSubscribe = async (req, res, next) => {
     }
 };
 
+/**
+ * fetch list of active matches
+ */
+const getMatchInfo = async (req, res, next) => {
+    try {
+      const data = await matchService.getMatchInfo({ })
+      res.success({ data });
+    } catch (error) {
+      next(error)
+    }
+};
+
 module.exports = {
   getDashboard,
   scheduleMatch,
   cancelMatch,
   matchSubscribe,
-  matchUnSubscribe
+  matchUnSubscribe,
+  getMatchInfo,
 };

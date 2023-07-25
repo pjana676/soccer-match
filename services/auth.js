@@ -23,9 +23,9 @@ const getJwtTokenPayload = (user) => {
  * @{user payload}
  * */
 const registerUser = async ({ password, username, email }) => {
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ $or: [{ email }, { username }] });
   if (user) {
-    throw createError.BadRequest(__.error_email_already_exist);
+    throw createError.BadRequest(__.error_email_or_username_already_exist);
   }
   const newUser = new User({
     email,

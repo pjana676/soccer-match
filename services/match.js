@@ -72,7 +72,8 @@ const matchSubscribe = async ({ userId, matchId }) => {
 
 /**
  * User could mark unsubscribe to subscribed match
- * @param {*} param0 
+ * @param {*} userId 
+ * @param {*} subscriptionId 
  * @returns 
  */
 const matchUnSubscribe = async ({ userId, subscriptionId }) => {
@@ -86,6 +87,15 @@ const matchUnSubscribe = async ({ userId, subscriptionId }) => {
   return __.successfully_unsubscribed;
 }
 
+const getDashboard = async () => {
+  const matches = await getMatchInfo({});
+  const registeredSubscribers = await matchSubscription.count({ isActive: true });
+  const responseObject = {
+    "registered_watchers_online": registeredSubscribers,
+    "matches": matches,
+  };
+  return responseObject;
+}
 
 module.exports = {
   getMatchInfo,
@@ -93,4 +103,5 @@ module.exports = {
   cancelMatch,
   matchSubscribe,
   matchUnSubscribe,
+  getDashboard,
 };

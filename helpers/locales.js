@@ -24,8 +24,9 @@ module.exports = {
 
   error_label_not_valid: '{#label} is not valid',
   error_email_not_valid: 'Email not valid',
-  error_email_already_exist: 'Entered email already exist',
+  error_email_or_username_already_exist: 'Entered email already exist',
   invalid_match_reference: 'Invalid match reference!',
   invalid_subscription_reference: 'Invalid subscription reference!!',
   invalid_object_id: 'Invalid object id!',
+  match_date_should_not_as_past_date: 'Match date must be future only!',
 };
