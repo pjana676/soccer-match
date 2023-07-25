@@ -14,6 +14,7 @@ router.put('/admin/cancel-match/:matchId', jwtAuth, isAdminAuthenticated, matchC
 
 // User Access
 router.get('/list', jwtAuth, isAuthenticated, matchController.getMatchInfo);
+router.get('/registered/dashboard', jwtAuth, isAuthenticated, matchController.registeredDashboard);
 router.put('/subscribe/:matchId', jwtAuth, isAuthenticated, matchController.matchSubscribe);
 router.put('/unsubscribe/:subscriptionId', jwtAuth, isAuthenticated, matchController.matchUnSubscribe);
 

@@ -29,6 +29,8 @@ const scheduleMatch = async ({ matchDate, startTime, stadium, teams }) => {
   })
   await newMatch.save();
   const matchInfo = await getMatchInfo({ _id: newMatch._id });
+  // eslint-disable-next-line no-undef
+  io.emit('soccer_sync', await getDashboard())
   return { ..._.head(matchInfo) }
 }
 
@@ -43,6 +45,10 @@ const cancelMatch = async ({ matchId }) => {
     throw createError.BadRequest(__.invalid_match_reference);
   matchInfo.isActive = false;
   matchInfo.status = 'cancelled';
+  await matchInfo.save()
+  await matchSubscription.updateMany({ match: matchInfo }, { $set: { isActive: false } });
+  // eslint-disable-next-line no-undef
+  io.emit('soccer_sync', await getDashboard())
   return __.message_cancelled
 }
 
@@ -67,6 +73,9 @@ const matchSubscribe = async ({ userId, matchId }) => {
     match: matchInfo,
   })
   await newSubscription.save();
+  // eslint-disable-next-line no-undef
+  io.emit('soccer_sync', await getDashboard())
+
   return __.successfully_subscribed;
 }
 
@@ -84,14 +93,40 @@ const matchUnSubscribe = async ({ userId, subscriptionId }) => {
     throw createError.BadRequest(__.invalid_subscription_reference);
 
   await matchSubscription.findOneAndRemove({ user: userInfo, _id: subscriptionId })
+  // eslint-disable-next-line no-undef
+  io.emit('soccer_sync', await getDashboard())
   return __.successfully_unsubscribed;
 }
 
+/**
+ * Dashboard data from all users
+ * @returns 
+ */
 const getDashboard = async () => {
-  const matches = await getMatchInfo({});
+  const matches = await getMatchInfo();
   const registeredSubscribers = await matchSubscription.count({ isActive: true });
   const responseObject = {
     "registered_watchers_online": registeredSubscribers,
+    "matches": matches,
+  };
+  return responseObject;
+}
+
+/**
+ * Fetch dashboard data for registered user 
+ * @param {*} param0 
+ * @returns 
+ */
+const registerUserDashboard = async ({ userId }) => {
+  const userInfo = await user.findById(userId);
+  const registeredSubscribers = await matchSubscription.find({ isActive: true, user: userInfo }).lean();
+  const qFilter = {};
+  qFilter['_id'] = {
+    "$in": registeredSubscribers.map((e) => e.match)
+  }
+  const matches = await getMatchInfo(qFilter);
+  const responseObject = {
+    "registered_watchers_online": registeredSubscribers.length,
     "matches": matches,
   };
   return responseObject;
@@ -104,4 +139,5 @@ module.exports = {
   matchSubscribe,
   matchUnSubscribe,
   getDashboard,
+  registerUserDashboard,
 };

@@ -22,6 +22,21 @@ const getDashboard = async (req, res, next) => {
     next(error)
   }
 };
+/**
+ * Dashboard for registered user for only subscribed data
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+const registeredDashboard = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const matches = await matchService.registerUserDashboard({ userId });
+    res.success({ data: matches });
+  } catch (error) {
+    next(error)
+  }
+};
 
 const scheduleMatchSchema = Joi.object({
   matchDateTime: Joi.date()
@@ -123,4 +138,5 @@ module.exports = {
   matchSubscribe,
   matchUnSubscribe,
   getMatchInfo,
+  registeredDashboard,
 };

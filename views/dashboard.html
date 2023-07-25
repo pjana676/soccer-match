@@ -1,0 +1,178 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Soccer Match Web Panel</title>
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
+
+
+    <style>
+
+        .img-circle {
+            border-radius: 50%;
+        }
+
+        .img-responsive {
+            display: block;
+            max-width: 100%;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: rgba(255, 255, 255, .8) url('https://i.stack.imgur.com/FhHRx.gif') 50% 50% no-repeat;
+        }
+
+        body.loading {
+            overflow: hidden;
+        }
+
+        body.loading .modal {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="modal" style="padding-left:100px"><!-- Place at bottom of page for ajax loader --></div>
+    <div>
+        <div class="container" style="margin-top: 30px !important; ">
+
+            <div class="navbar-header"
+                style="padding: 15px;text-align: center;width: 100%; margin-bottom: 20px !important;">
+                <a class="navbar-brand" style="float: none; font-size: 200%;" href="#">Dashboard</a><br>
+
+
+            </div>
+            <div>
+                <div class="panel"  >
+                    <div class="panel-heading">
+                        <div class="row align-items-center">
+                            <div class="col" style="text-align: center;">
+                                <span class="pnl-heading">Registered Watchers Online: - </span>
+                                <span class="pull-right placed">
+                                    <span class="registered-watchers-online">-</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row" style="padding-left:20px">
+                <table id="example" class="table table-striped nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Match ID</th>
+                            <th>Start Date</th>
+                            <th>Start Time</th>
+                            <th>Score</th>
+                            <th>Status</th>
+                            <th>Stadium</th>
+                            <th>teams</th>
+                            <th>Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.1/moment.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        $(function () {
+            var $body = $("body");
+            var baseUrl = location.origin;
+            $body.addClass("loading");
+            var table = $('#example').DataTable({
+                destroy: true,
+                aLengthMenu: [
+                    [200,100,50,25,-1],
+                     ["All",200,100,50,25]
+                    // [25, 50, 100, 200, -1],
+                    // [25, 50, 100, 200, "All"]
+                ],
+                ajax: {
+                    "url": baseUrl + "/api/match/dashboard",
+                    "dataSrc": function (ajaxResult) {
+                        $body.removeClass("loading");
+                        $('.registered-watchers-online').text(ajaxResult.data.registered_watchers_online)
+                        return ajaxResult.data.matches;
+                    }
+                },
+                "aaSorting": [[1, "desc"]],
+                columns: [
+                    { "data": "_id" },
+                    { "data": null, render: function ( data, type, row ) {
+                        return moment(data.matchDate).format('DD MMM YYYY')
+                    }},
+                    { "data": "startTime" },
+                    { "data": "score" },
+                    { "data": "status" },
+                    { "data": "stadium" },
+                    { "data": "teams" },
+                    { "data": null, render: function ( data, type, row ) {
+                        return moment(data.createdDate).format('DD MMM YYYY HH:mm')
+                    }},
+                ]
+            });
+
+
+            var socket = io.connect();
+            socket.on('soccer_sync', function(data){
+                $('.registered-watchers-online').text(data.registered_watchers_online)
+                var table = $('#example').DataTable({
+                    destroy: true,
+                    aLengthMenu: [
+                        [200,100,50,25,-1],
+                        ["All",200,100,50,25]
+                        // [25, 50, 100, 200, -1],
+                        // [25, 50, 100, 200, "All"]
+                    ],
+                    data: data.matches,
+                    "aaSorting": [[1, "desc"]],
+                    columns: [
+                        { "data": "_id" },
+                        { "data": null, render: function ( data, type, row ) {
+                            return moment(data.matchDate).format('DD MMM YYYY')
+                        }},
+                        { "data": "startTime" },
+                        { "data": "score" },
+                        { "data": "status" },
+                        { "data": "stadium" },
+                        { "data": "teams" },
+                        { "data": null, render: function ( data, type, row ) {
+                            return moment(data.createdDate).format('DD MMM YYYY HH:mm')
+                        }},
+                    ]
+                });
+            })
+        })
+        
+
+    </script>
+</body>
+
+</html>

@@ -4,6 +4,14 @@ const subscriptionSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   isActive: { type: Boolean, default: true },
   match: { type: mongoose.Schema.Types.ObjectId, ref: 'Match', required: true },
+  createdDate: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedDate: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Subscription = mongoose.model('Subscription', subscriptionSchema);

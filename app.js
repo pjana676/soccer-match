@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const dotenv = require('dotenv');
+var path = require('path');
 // eslint-disable-next-line no-unused-vars
 const db = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
@@ -14,6 +15,19 @@ dotenv.config();
 app.use(express.json());
 app.use(cors());
 
+
+/**
+ * HTML file render config
+ * @param {*} options 
+ */
+app.set('views', path.join(__dirname, 'views'));
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'jade');
+app.set('json spaces', 1);
+
+app.get('/', function(req,res){
+  res.render('dashboard.html');
+});
 
 function successResponder(options = {}) {
   const { data, message = 'Success', code = 200, paging } = options;
