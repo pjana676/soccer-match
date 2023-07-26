@@ -70,4 +70,4 @@ userSchema.methods.isValidPassword = function isValidPassword(passwordToCheck) {
   });
 };
 
-module.exports = mongoose.model('Users', userSchema, 'Users');
+module.exports = mongoose.model('users', userSchema, 'users');

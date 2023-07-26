@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  node-app:
+    build: .
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017
+      - DATABASE_NAME=soccer-match
+      - "TZ=Asia/Kolkata"
+    image: soccer_match
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/app
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodata:/data/db
+
+volumes:
+  mongodata:
