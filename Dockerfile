@@ -5,7 +5,7 @@ FROM node:18.16.1
 WORKDIR /app
 
 # Copy package.json and package-lock.json
-COPY package*.json ./
+# COPY package*.json ./
 
 # install NPM itself
 RUN npm install -g npm@9.8.1
