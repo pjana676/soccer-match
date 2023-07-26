@@ -7,6 +7,9 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
+# install NPM itself
+RUN npm install -g npm@9.8.1
+
 # Install dependencies
 RUN npm install
 
@@ -17,5 +20,5 @@ COPY . .
 EXPOSE 3000
 
 # Specify the command to run your Node.js application
-CMD npm run set && npm start
+CMD npm start
 # CMD ["npm", "run", "set"]
