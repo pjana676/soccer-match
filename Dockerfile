@@ -9,7 +9,9 @@ COPY package.json ./
 COPY package.json package-lock.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install -g npm@9.8.1
+RUN rm -rf /usr/local/lib/node_modules/npm
+RUN mv node_modules/npm /usr/local/lib/node_modules/npm
 
 # Copy application files
 COPY . .
