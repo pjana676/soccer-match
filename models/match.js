@@ -6,6 +6,7 @@ const matchSchema = new mongoose.Schema({
   matchStartDateTime: { type: Date, required: true },
   matchEndDateTime: { type: Date, required: true },
   score: { type: String, default: 'NA' },
+  playerCount: { type: String, default: 'NA' },
   isActive: { type: Boolean, default: true },
   status: { type: String, enum: ['not-started', 'in-progress', 'ended', 'cancelled'], default: 'not-started' },
   stadium: { type: String, required: true },

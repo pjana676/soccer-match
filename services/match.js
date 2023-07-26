@@ -215,6 +215,32 @@ const registerUserDashboard = async ({ userId }) => {
   return responseObject;
 }
 
+/**
+ * Modify the player count to the particular match, according user uploaded image
+ * @param {*} userId 
+ * @param {*} matchId 
+ * @param {*} userId 
+ * @returns 
+ */
+const modifyPlayerCount = async ({ userId, matchId, ...restObject }) => {
+  const userInfo = await user.findById(userId);
+  const matchInfo = await match.findById(matchId);
+  // check matchId is valid or not
+  if (!matchInfo)
+    throw createError.BadRequest(__.invalid_match_reference);
+
+  const subscriptionInfo = await matchSubscription.findOne({ user: userInfo, match: matchInfo });
+  if (!subscriptionInfo)
+    throw createError.BadRequest(__.yet_not_subscribe);
+
+  matchInfo.playerCount = restObject.num_people;
+  await matchInfo.save();
+  // eslint-disable-next-line no-undef
+  io.emit('soccer_sync', await getDashboard())
+  const updatedMatchInfo = await getMatchInfo({ _id: matchInfo._id });
+  return updatedMatchInfo;
+}
+
 module.exports = {
   getMatchInfo,
   scheduleMatch,
@@ -223,4 +249,5 @@ module.exports = {
   matchUnSubscribe,
   getDashboard,
   registerUserDashboard,
+  modifyPlayerCount,
 };
