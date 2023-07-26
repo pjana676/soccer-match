@@ -5,7 +5,7 @@ FROM node:alpine
 WORKDIR /app
 
 # Copy package.json and package-lock.json
-#COPY package*.json ./
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install
@@ -17,5 +17,5 @@ COPY . .
 EXPOSE 3000
 
 # Specify the command to run your Node.js application
-CMD npm run set && npm start
+CMD npm start
 # CMD ["npm", "run", "set"]
