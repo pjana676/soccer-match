@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  app:
+  node-app:
     build: .
     environment:
       - MONGODB_URI=mongodb://mongo:27017
