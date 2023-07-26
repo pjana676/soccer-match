@@ -1,5 +1,5 @@
 # Use a base Node.js image
-FROM node
+FROM node:boron
 
 # Set the working directory
 WORKDIR /app
