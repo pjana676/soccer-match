@@ -30,4 +30,5 @@ module.exports = {
   yet_not_subscribe: 'Yet not subscribe of this match reference!!',
   invalid_object_id: 'Invalid object id!',
   match_date_should_not_as_past_date: 'Match date must be future only!',
+  django_application_yet_not_established: 'Django application yet not established!',
 };

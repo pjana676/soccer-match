@@ -143,20 +143,24 @@ const playerCountInThePicture = async (req, res, next) => {
     const userId = req.user._id;
     const { matchId } = req.params;
     const { DJANGO_APPLICATION_BASE_URL } = process.env;
-    const response = await axios.post(
-      `${DJANGO_APPLICATION_BASE_URL}/image_processing/api/detect-people/`,
-      req.file.buffer, {
+    let responseData = {};
+    try {
+      const response = await axios.post(
+        `${DJANGO_APPLICATION_BASE_URL}/image_processing/api/detect-people/`,
+        req.file.buffer, {
         headers: {
           'Content-Type': 'application/octet-stream',
           'Content-Disposition': `inline;filename=${path.basename(req.file.originalname)}`
         },
-      }
-    );
-    console.log(response.data)
-    const data = await matchService.modifyPlayerCount({ userId, matchId, ...response.data })
+      });
+      responseData = response.data;
+    } catch (error) {
+      throw createError.ServiceUnavailable(__.django_application_yet_not_established);
+    }
+    const data = await matchService.modifyPlayerCount({ userId, matchId, ...responseData })
     res.success({ data });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
