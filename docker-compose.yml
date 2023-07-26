@@ -1,6 +1,14 @@
 version: '3.9'
 
 services:
+  mongo:
+    image: mongo:latest
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodata:/data/db
+
   node-app:
     build: .
     environment:
@@ -15,13 +23,6 @@ services:
     depends_on:
       - mongo
 
-  mongo:
-    image: mongo:latest
-    restart: always
-    ports:
-      - 27017:27017
-    volumes:
-      - mongodata:/data/db
 
 volumes:
   mongodata:
