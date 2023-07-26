@@ -5,10 +5,8 @@ FROM node:alpine
 WORKDIR /app
 
 # Copy package.json and package-lock.json
-COPY package*.json ./
-
-#install latest npm version
-Run `npm install -g npm@9.8.1`
+COPY package.json ./
+COPY package.json package-lock.json ./
 
 # Install dependencies
 RUN npm install
