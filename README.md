@@ -23,8 +23,7 @@ create database call `soccer-match` if not exist
 
 write in `.env` file 
 ```
-MONGODB_URI=mongodb://127.0.0.1:27017
-DATABASE_NAME=soccer-match
+MONGODB_URI=mongodb://127.0.0.1:27017/soccer-match
 PORT=3000
 JWT_SECRET=your-secret
 JWT_EXPIRY=2h
