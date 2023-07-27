@@ -3,9 +3,9 @@ const dotenv = require('dotenv');
 
 dotenv.config(); // Load environment variables from .env file
 
-const { MONGODB_URI, DATABASE_NAME } = process.env;
+const { MONGODB_URI } = process.env;
 
-mongoose.connect(`${MONGODB_URI}/${DATABASE_NAME}`, {
+mongoose.connect(`${MONGODB_URI}`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
