@@ -21,6 +21,7 @@ services:
       - .:/app
     depends_on:
       - mongo
+    command: npm install
 
 
 volumes:
